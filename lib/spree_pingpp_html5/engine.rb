@@ -16,5 +16,12 @@ module SpreePingppHtml5
     end
 
     config.to_prepare &method(:activate).to_proc
+
+
+    config.after_initialize do |app|
+      app.config.spree.payment_methods += [
+        Spree::PingppPaymentMethod
+      ]
+    end
   end
 end
