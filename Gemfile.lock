@@ -68,7 +68,7 @@ GIT
 PATH
   remote: .
   specs:
-    spree_pingpp_html5 (2.4.10)
+    spree_pingpp (2.4.10)
       pingpp (~> 2.0.8)
       spree_core (~> 2.4.10)
 
@@ -354,5 +354,5 @@ DEPENDENCIES
   simplecov
   spree!
   spree_auth_devise!
-  spree_pingpp_html5!
+  spree_pingpp!
   sqlite3

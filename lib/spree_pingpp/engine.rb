@@ -2,7 +2,7 @@ module SpreePingppHtml5
   class Engine < Rails::Engine
     require 'spree/core'
     isolate_namespace Spree
-    engine_name 'spree_pingpp_html5'
+    engine_name 'spree_pingpp'
 
     # use rspec for tests
     config.generators do |g|
@@ -20,7 +20,7 @@ module SpreePingppHtml5
 
     config.after_initialize do |app|
       app.config.spree.payment_methods += [
-        Spree::PingppPaymentMethod
+        Spree::Gateway::PingppPc
       ]
     end
   end

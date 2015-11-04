@@ -7,17 +7,17 @@ It is working in progress...
 Installation
 ------------
 
-Add spree_pingpp_html5 to your Gemfile:
+Add spree_pingpp to your Gemfile:
 
 ```ruby
-gem 'spree_pingpp_html5'
+gem 'spree_pingpp'
 ```
 
 Bundle your dependencies and run the installation generator:
 
 ```shell
 bundle
-bundle exec rails g spree_pingpp_html5:install
+bundle exec rails g spree_pingpp:install
 ```
 
 Testing
@@ -34,7 +34,7 @@ When testing your applications integration with this extension you may use it's 
 Simply add this require statement to your spec_helper:
 
 ```ruby
-require 'spree_pingpp_html5/factories'
+require 'spree_pingpp/factories'
 ```
 
 Related project

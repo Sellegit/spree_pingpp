@@ -30,8 +30,8 @@ require 'spree/testing_support/controller_requests'
 require 'spree/testing_support/factories'
 require 'spree/testing_support/url_helpers'
 
-# Requires factories defined in lib/spree_pingpp_html5/factories.rb
-require 'spree_pingpp_html5/factories'
+# Requires factories defined in lib/spree_pingpp/factories.rb
+require 'spree_pingpp/factories'
 
 RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
