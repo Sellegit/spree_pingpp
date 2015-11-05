@@ -1,7 +1,7 @@
 #encoding: utf-8
 module Spree
   CheckoutController.class_eval do
-    before_filter :checkout_hook, :only => [:update]
+    #before_filter :checkout_hook, :only => [:update]
 
     # handle all supported billing_integration
     def handle_pingpp
@@ -12,7 +12,8 @@ module Spree
           #more flow detail
           #https://pingxx.com/guidance/products/sdk
           payment_provider = payment_method.provider
-          charge = payment_provider.create_charge( order )
+          #order_path( order, :only_path => false )
+          charge = payment_provider.create_charge( @order, spree.order_path( @order, :only_path => false ) )
           render json: charge
         end
       else
