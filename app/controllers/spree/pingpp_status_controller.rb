@@ -4,73 +4,35 @@ module Spree
     #fixes Action::Controller::InvalidAuthenticityToken error on alipay_notify
     skip_before_action :verify_authenticity_token
 
-    # * params
-    #   * channel - required
-    def charge
-      
+    # success url
+    def charge_done
+      #alipay, get, "result"=>"success", "out_trade_no"=>"R677576938"
+      #upacp_pc, post, "orderId"=>"R677576938", "respMsg"=>"success"
+      order = retrieve_order
+      if order.complete?
+        spree.order_path( order )
+      else
+        redirect_to checkout_state_path(@order.state)
+      end
     end
 
-    def alipay_done
-      # alipay acount could vary in each store.
-      # get order_no from query string -> get payment -> initialize Alipay -> verify ailpay callback
-      order = retrieve_order params["out_trade_no"]
-      alipay_payment = get_alipay_payment( order )
-
-      if alipay_payment.payment_method.provider.verify?( request.query_parameters )
-        # 担保交易的交易状态变更顺序依次是:
-        #  WAIT_BUYER_PAY→WAIT_SELLER_SEND_GOODS→WAIT_BUYER_CONFIRM_GOODS→TRADE_FINISHED。
-        # 即时到账的交易状态变更顺序依次是:
-        #  WAIT_BUYER_PAY→TRADE_FINISHED。
-        complete_order( order )
-        if order.complete?
-          #copy from spree/frontend/checkout_controller
-          session[:order_id] = nil
-          flash.notice = Spree.t(:order_processed_successfully)
-          flash['order_completed'] = true
-          redirect_to spree.order_path( order )
-        else
-          #Strange
-          redirect_to checkout_state_path(order.state)
-        end
-      else
-        redirect_to checkout_state_path(order.state)
+    def charge_notify
+      begin
+        event = JSON.parse( request.body )
+        response_status, response_body = PingppEventHandler.new( event ).perform
+      rescue JSON::ParserError
+        response_body = 'JSON 解析失败'
       end
-
-    end
-
-    def alipay_notify
-      order = retrieve_order params["out_trade_no"]
-      alipay_payment = get_alipay_payment( order )
-      if alipay_payment.payment_method.provider.verify?( request.request_parameters )
-        complete_order( order )
-        render text: "success"
-      else
-        render text: "fail"
-      end
-
+      render plain: response_body, status: response_status, content_type: 'text/plain; charset=utf-8'
     end
 
     private
 
-    def retrieve_order(order_number)
+    def retrieve_order()
+      order_number = ( params["orderId"] || params["out_trade_no"] )
       @order = Spree::Order.find_by_number!(order_number)
     end
 
-    def get_alipay_payment( order )
-      #use payment instead of unprocessed_payments, order may be completed.
-      order.payments.last
-    end
 
-    def complete_order( order )
-      unless order.complete?
-        alipay_payment = order.unprocessed_payments.last
-        # payment.state always :complete for both service, payment.source store more detail
-        alipay_transaction = AlipayTransaction.create_from_postback params
-        alipay_payment.source = alipay_transaction
-        alipay_payment.save!
-        # it require pending_payments to process_payments!
-        order.next
-      end
-    end
   end
 end
