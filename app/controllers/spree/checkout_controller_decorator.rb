@@ -12,6 +12,7 @@ module Spree
           #more flow detail
           #https://pingxx.com/guidance/products/sdk
           payment_provider = payment_method.provider
+          #please try with host 127.0.0.1 instead localhost, or get invalid url http://localhost:3000/...
           #order_path( order, :only_path => false )
           charge = payment_provider.create_charge( @order, spree.order_path( @order, :only_path => false ) )
           render json: charge

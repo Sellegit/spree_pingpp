@@ -1,2 +1,5 @@
-<%= button_tag 'alipay direct',  class: 'pingpp_channel', data: { channel: 'alipay_direct' }  %>
-<%= button_tag 'union pay' , class: 'pingpp_channel', data: { channel: 'alipay_direct' } %>
+
+<%= text_field_tag "payment_source[#{payment_method.id}][channel]", "alipay_pc_direct", { id: 'pingpp_channel' } %>
+
+<%= button_tag 'alipay direct',  class: 'pingpp_channel', data: { channel: 'alipay_pc_direct' }  %>
+<%= button_tag 'union pay' , class: 'pingpp_channel', data: { channel: 'upacp_pc' } %>
