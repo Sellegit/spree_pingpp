@@ -19,7 +19,7 @@ module Spree
       params = {
         :order_no => order.number,
         :amount   => (order.total * 100).to_i,                     # in cent
-        :subject  => "订单编号 : #{order.number}",
+        :subject  => "Order : #{order.number}",
         :body     => order.products.collect(&:name).to_s,  #String(400)
         :channel  => channel,
         :currency => "cny",
