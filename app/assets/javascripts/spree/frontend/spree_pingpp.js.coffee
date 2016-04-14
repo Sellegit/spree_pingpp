@@ -5,11 +5,13 @@ Spree.ready ($) ->
   Spree.onPingppPayment = () ->
     if ($ '#checkout_form_payment').is('*')
       $('.pingpp_channel').click ->
-        $( '#pingpp_channel' ).val( $(this).data('channel') )
+        console.log $(this).data('payment_method_id')
         $.ajax
           type: 'patch'
           url: Spree.routes.handle_pingpp
-          data: $('#checkout_form_payment').serialize()
+          data: {
+            payment_method_id: $(this).data('payment-method-id')
+          }
           success: (charge)->
             pingppPc.createPayment charge, (result, err) ->
               if result == "success"

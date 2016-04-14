@@ -1,4 +1,4 @@
-module SpreePingppHtml5
+module SpreePingpp
   module Generators
     class InstallGenerator < Rails::Generators::Base
 
@@ -6,12 +6,10 @@ module SpreePingppHtml5
 
       def add_javascripts
         append_file 'vendor/assets/javascripts/spree/frontend/all.js', "//= require spree/frontend/spree_pingpp\n"
-        append_file 'vendor/assets/javascripts/spree/backend/all.js', "//= require spree/backend/spree_pingpp\n"
       end
 
       def add_stylesheets
         inject_into_file 'vendor/assets/stylesheets/spree/frontend/all.css', " *= require spree/frontend/spree_pingpp\n", :before => /\*\//, :verbose => true
-        inject_into_file 'vendor/assets/stylesheets/spree/backend/all.css', " *= require spree/backend/spree_pingpp\n", :before => /\*\//, :verbose => true
       end
 
       def add_migrations
