@@ -1,0 +1,12 @@
+<%= javascript_include_tag 'pingpp' %>
+<script>
+    pingpp.createPayment(<%= @charge.to_json.html_safe %>, function(result, err) {
+      if (result=="success") {
+        location.href = "<%= spree.order_path( @order ) %>";
+      } else {
+        location.href = "<%= spree.checkout_state_path(:payment) %>";
+      }
+    });
+</script>
+<body>
+</body>

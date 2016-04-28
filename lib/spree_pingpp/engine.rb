@@ -17,10 +17,15 @@ module SpreePingppHtml5
 
     config.to_prepare &method(:activate).to_proc
 
+    initializer :assets do |config|
+      Rails.application.config.assets.paths << root.join("app", "assets", "javascripts", "spree")
+      Rails.application.config.assets.precompile += %w{ pingpp.js }
+    end
 
     config.after_initialize do |app|
       app.config.spree.payment_methods += [
-        Spree::Gateway::PingppBase
+        Spree::Gateway::PingppPc,
+        Spree::Gateway::PingppWeixin
       ]
     end
   end

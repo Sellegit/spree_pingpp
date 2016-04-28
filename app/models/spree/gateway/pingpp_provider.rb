@@ -1,7 +1,8 @@
 require "pingpp"
 module Spree
   class Gateway::PingppProvider
-    PingppChannelEnum = Struct.new( :alipay_pc_direct, :upacp_pc )[ 'alipay_pc_direct', 'upacp_pc']
+    PingppPcChannelEnum = Struct.new(:alipay_pc_direct, :upacp_pc)[ 'alipay_pc_direct', 'upacp_pc']
+    PingppWeixinChannelEnum = Struct.new(:wx_pub)['wx_pub']
     attr_accessor :payment_method
 
     def initialize( payment_method )
@@ -14,9 +15,9 @@ module Spree
     end
 
 
-    def create_charge( order, channel, success_url )
+    def create_charge( order, channel, success_url, open_id=nil )
       amount = payment_method.preferred_test_mode ? 1 : (order.total * 100).to_i
-      channel ||= PingppChannelEnum.alipay_pc_direct
+      channel ||= PingppPcChannelEnum.alipay_pc_direct
       params = {
         :order_no => order.number,
         :amount   => amount,                     # in cent
@@ -39,12 +40,19 @@ module Spree
           :result_url => success_url #
         }
       }
+      extra_wx_pub_params={
+        :extra => {
+          :open_id => open_id
+        }
+      }
 
       case channel
-      when PingppChannelEnum.alipay_pc_direct
+      when PingppPcChannelEnum.alipay_pc_direct
         params.merge! extra_alipay_params
-      when PingppChannelEnum.upacp_pc
+      when PingppPcChannelEnum.upacp_pc
         params.merge! extra_upacp_params
+      when PingppWeixinChannelEnum.wx_pub
+        params.merge! extra_wx_pub_params
       end
 
       charge = Pingpp::Charge.create( params  )
@@ -63,7 +71,7 @@ module Spree
     end
 
     def get_client_ip
-      "127.0.0.1"
+      '127.0.0.1'
     end
   end
 end

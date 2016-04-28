@@ -1,5 +1,3 @@
-
-<%= hidden_field_tag "payment_pingpp_channel", "alipay_pc_direct", { id: 'pingpp_channel' } %>
-<% payment_method.available_channels.each{|channel|  %>
-  <%= button_tag channel,  class: 'pingpp_channel', data: { channel: channel, payment_method_id: payment_method.id }  %>
-<% } %>
+<%= button_tag payment_method.name,  class: 'pingpp_channel',
+      data: { channel: payment_method.preferred_channels,
+        payment_method_id: payment_method.id }  %>
