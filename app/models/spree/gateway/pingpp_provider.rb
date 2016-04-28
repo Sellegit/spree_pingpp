@@ -3,6 +3,7 @@ module Spree
   class Gateway::PingppProvider
     PingppPcChannelEnum = Struct.new(:alipay_pc_direct, :upacp_pc)[ 'alipay_pc_direct', 'upacp_pc']
     PingppWeixinChannelEnum = Struct.new(:wx_pub)['wx_pub']
+    PingppMobileChannelEnum = Struct.new(:alipay_wap)['alipay_wap']
     attr_accessor :payment_method
 
     def initialize( payment_method )
@@ -48,6 +49,8 @@ module Spree
 
       case channel
       when PingppPcChannelEnum.alipay_pc_direct
+        params.merge! extra_alipay_params
+      when PingppMobileChannelEnum.alipay_wap
         params.merge! extra_alipay_params
       when PingppPcChannelEnum.upacp_pc
         params.merge! extra_upacp_params

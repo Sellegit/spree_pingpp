@@ -1,4 +1,5 @@
 //= require 'pingpp-pc'
+//= require 'pingpp'
 Spree.routes.handle_pingpp = Spree.pathFor('checkout/handle_pingpp')
 
 Spree.ready ($) ->
@@ -19,7 +20,11 @@ Spree.ready ($) ->
                 if result == "success"
 
                 else if result == "fail"
-                  alert(err)
+                  pingpp.createPayment charge, (result, err) ->
+                    if result == "success"
+                    else if result == "fail"
+                    else if result == "cancel"
+                      alert(err)
                 else if result == "cancel"
                   alert(err)
         false
