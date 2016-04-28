@@ -4,4 +4,6 @@ Spree::Core::Engine.routes.draw do
 
   # alipay get,  upacp_pc post
   match '/pingpp/charge_done', :to=> 'pingpp_status#charge_done', as: :pingpp_charge_done,  via: [:get, :post]
+
+  post '/pingpp/charge_notify', :to=> 'pingpp_status#charge_notify', as: :pingpp_charge_notify
 end

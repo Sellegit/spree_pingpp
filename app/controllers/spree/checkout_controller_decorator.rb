@@ -10,7 +10,7 @@ module Spree
                             payment_method: payment_method)
 
       begin
-        @pingpp_base_class = Spree::Gateway::PingppPc
+        @pingpp_base_class = Spree::Gateway::PingppBase
         pingpp_channel = params['payment_pingpp_channel']
         payment_method = get_payment_method(  )
         puts "payment_method = #{payment_method.inspect} "

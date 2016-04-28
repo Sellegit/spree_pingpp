@@ -15,10 +15,11 @@ module Spree
 
 
     def create_charge( order, channel, success_url )
+      amount = payment_method.preferred_test_mode ? 1 : (order.total * 100).to_i
       channel ||= PingppChannelEnum.alipay_pc_direct
       params = {
         :order_no => order.number,
-        :amount   => (order.total * 100).to_i,                     # in cent
+        :amount   => amount,                     # in cent
         :subject  => "Order : #{order.number}",
         :body     => order.products.collect(&:name).to_s,  #String(400)
         :channel  => channel,
