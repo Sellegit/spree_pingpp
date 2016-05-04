@@ -4,11 +4,10 @@ require 'OpenSSL'
 require 'base64'
 
 #inspired by https://github.com/spree-contrib/spree_skrill
-module Spree
-  class PingppStatusController < StoreController
+  class PingppStatusController < BaseController
     #fixes Action::Controller::InvalidAuthenticityToken error on alipay_notify
     skip_before_action :verify_authenticity_token
-    skip_before_action :check_login
+    skip_before_action :require_login
 
     # 验证 webhooks 签名
     def verify_signature(raw_data, signature, pub_key_path)
@@ -21,7 +20,7 @@ module Spree
       #alipay, get, "result"=>"success", "out_trade_no"=>"R677576938"
       #upacp_pc, post, "orderId"=>"R677576938", "respMsg"=>"success"
       order = retrieve_order
-      redirect_to spree.order_path( order )
+      redirect_to order_path( order )
     end
 
     def charge_notify
@@ -121,4 +120,3 @@ module Spree
     end
 
   end
-end
