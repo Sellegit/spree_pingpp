@@ -4,6 +4,8 @@ module Spree
     preference :api_key, :string
     preference :app_key, :string
     preference :channels, :string
+    preference :mobile_show, :boolean, :default => false
+    preference :web_show, :boolean, :default => true
     #Pingpp.api_key = "YOUR-KEY"
 
     def auto_capture?
