@@ -17,19 +17,19 @@ class PingppCheckoutController < BaseController
     case payment_method.preferred_channels
     when 'wx_pub'
       url = Pingpp::WxPubOauth.create_oauth_url_for_code(payment_method.preferred_wx_app_id, pingpp_wx_get_open_id_url)
-      render :json => {:redirect_to => url}
+      @charge = {:redirect_to => url}.to_json
     else
       @order.payments.create(amount: @order.total,
       payment_method: payment_method)
       begin
         payment_provider = payment_method.provider
-        charge = payment_provider.create_charge( @order, payment_method.preferred_channels, pingpp_charge_done_path( :only_path => false ) )
-        render json: charge
+        @charge = payment_provider.create_charge( @order, payment_method.preferred_channels, pingpp_charge_done_path( :only_path => false )).to_json
       rescue SocketError
         flash[:error] = Spree.t('flash.sign_server_connection_failed', :scope => 'chinapay')
         redirect_to checkout_state_path(:payment)
       end
     end
+    render layout: false
   end
 
   def wx_get_open_id
