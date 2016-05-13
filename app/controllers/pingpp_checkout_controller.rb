@@ -1,6 +1,6 @@
 require 'webrick'
 require 'json'
-require 'OpenSSL'
+require 'openssl'
 require 'base64'
 require 'spree/gateway/pingpp_provider'
 #inspired by https://github.com/spree-contrib/spree_skrill
