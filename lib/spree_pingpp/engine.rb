@@ -19,7 +19,7 @@ module SpreePingppHtml5
 
     initializer :assets do |config|
       Rails.application.config.assets.paths << root.join("app", "assets", "javascripts", "spree")
-      Rails.application.config.assets.precompile += %w{ pingpp.js frontend/spree_pingpp.js }
+      Rails.application.config.assets.precompile += %w{ pingpp.js spree/frontend/spree_pingpp.js }
     end
 
     config.after_initialize do |app|
