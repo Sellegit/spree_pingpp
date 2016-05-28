@@ -1,7 +1,7 @@
 require "pingpp"
 module Spree
   class Gateway::PingppProvider
-    PingppPcChannelEnum = Struct.new(:alipay_pc_direct, :upacp_pc)[ 'alipay_pc_direct', 'upacp_pc']
+    PingppPcChannelEnum = Struct.new(:alipay_pc_direct, :upacp_pc, :wx_pub_qr)[ 'alipay_pc_direct', 'upacp_pc', 'wx_pub_qr']
     PingppWeixinChannelEnum = Struct.new(:wx_pub)['wx_pub']
     PingppMobileChannelEnum = Struct.new(:alipay_wap)['alipay_wap']
     attr_accessor :payment_method
@@ -46,6 +46,11 @@ module Spree
           :open_id => open_id
         }
       }
+      extra_wx_pub_qr_params={
+        :extra => {
+          :product_id => order.number
+        }
+      }
 
       case channel
       when PingppPcChannelEnum.alipay_pc_direct
@@ -56,11 +61,13 @@ module Spree
         params.merge! extra_upacp_params
       when PingppWeixinChannelEnum.wx_pub
         params.merge! extra_wx_pub_params
+      when PingppPcChannelEnum.wx_pub_qr
+        params.merge! extra_wx_pub_qr_params
       end
 
-      charge = Pingpp::Charge.create( params  )
-      # store charge "id": "ch_Hm5uTSifDOuTy9iLeLPSurrD",
       payment = get_payment_by_order( order )
+      # store charge "id": "ch_Hm5uTSifDOuTy9iLeLPSurrD",
+      charge = Pingpp::Charge.create( params  ) rescue Pingpp::Charge.retrieve(payment.response_code)
       payment.update_attribute( :response_code, charge['id'] )
       charge
     end
