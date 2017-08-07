@@ -1,4 +1,4 @@
-SpreePingppHtml5
+SpreePingpp
 ================
 
 Integrate pingpp-html5 into spree,
