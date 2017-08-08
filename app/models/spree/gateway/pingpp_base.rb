@@ -3,7 +3,7 @@ module Spree
   class Gateway::PingppBase < PaymentMethod
     preference :api_key, :string
     preference :app_key, :string
-    preference :channels, :string
+    preference :channel, :string
     #Pingpp.api_key = "YOUR-KEY"
 
     def provider
@@ -14,8 +14,12 @@ module Spree
       false
     end
 
-    def available_channels
-      self.preferred_channels.split(',')
+    def available_channel
+      self.preferred_channel
+    end
+
+    def auto_capture?
+      true
     end
 
   end

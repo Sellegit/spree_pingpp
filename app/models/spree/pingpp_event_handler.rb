@@ -6,7 +6,6 @@ module Spree
       self.event = event
       status = 500
       response_body = '' # 可自定义
-
     end
 
     def perform
@@ -16,8 +15,8 @@ module Spree
         charge_succeeded
         status = 200
         response_body = 'ok'
-      elsif event['object'] == 'refund.succeeded'
-        # 开发者在此处加入对退款异步通知的处理代码
+      elsif event['type'] == 'refund.succeeded'
+        refund_succeeded
         status = 200
         response_body = 'ok'
       else
@@ -35,6 +34,15 @@ module Spree
           payment.complete!
           payment.order.next! until payment.order.completed?
         end
+      end
+    end
+
+    def refund_succeeded
+      pingpp_refund = event['data']['object']
+      payment = Spree::Payment.find_by(response_code: pingpp_refund['charge'])
+      if payment.present? && payment.completed?
+        refund = payment.refunds.find_or_create_by!({transaction_id: pingpp_refund['id'], amount: Money.new(pingpp_refund['amount']).to_f, refund_reason_id: 1})
+        payment.order.update_with_updater!
       end
     end
   end

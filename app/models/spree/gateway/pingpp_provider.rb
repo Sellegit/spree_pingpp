@@ -1,4 +1,3 @@
-require "pingpp"
 module Spree
   class Gateway::PingppProvider
     PingppChannelEnum = Struct.new( :alipay_pc_direct, :upacp_pc )[ 'alipay_pc_direct', 'upacp_pc']
@@ -13,7 +12,6 @@ module Spree
       Pingpp.api_key = key
     end
 
-
     def create_charge( order, channel, success_url )
       channel ||= PingppChannelEnum.alipay_pc_direct
       params = {
@@ -22,7 +20,7 @@ module Spree
         :subject  => "Order : #{order.number}",
         :body     => order.products.collect(&:name).to_s,  #String(400)
         :channel  => channel,
-        :currency => "cny",
+        :currency => 'cny',
         :client_ip=> get_client_ip,
         :app => { :id => payment_method.preferred_app_key },
       }

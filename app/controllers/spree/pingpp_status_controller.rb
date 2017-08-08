@@ -9,11 +9,7 @@ module Spree
       #alipay, get, "result"=>"success", "out_trade_no"=>"R677576938"
       #upacp_pc, post, "orderId"=>"R677576938", "respMsg"=>"success"
       order = retrieve_order
-      if order.complete?
-        redirect_to spree.order_path(order)
-      else
-        redirect_to checkout_state_path(order.state)
-      end
+      redirect_to spree.order_path(order)
     end
 
     def charge_notify
