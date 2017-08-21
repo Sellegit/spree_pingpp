@@ -20,3 +20,12 @@ Spree.ready ($) ->
         false
 
   Spree.onPingppPayment()
+
+  Spree.SpreePingpp = () ->
+	  $('div[data-hook="checkout_payment_step"] input[type="radio"]').click ->
+		  if this.value == SpreePingpp.paymentMethodID
+			  $("#checkout_form_payment [data-hook=buttons]").hide()
+
+  Spree.SpreePingpp()
+
+window.SpreePingpp = {}	

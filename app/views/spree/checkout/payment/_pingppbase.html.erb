@@ -1,2 +1,5 @@
 
 <%= button_tag payment_method.available_channel,  class: 'pingpp_channel', data: { channel: payment_method.available_channel }  %>
+<script>
+  SpreePingpp.paymentMethodID = "<%= payment_method.id %>"  
+ </script>
