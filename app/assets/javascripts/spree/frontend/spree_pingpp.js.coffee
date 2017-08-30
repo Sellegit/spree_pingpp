@@ -21,11 +21,27 @@ Spree.ready ($) ->
 
   Spree.onPingppPayment()
 
-  Spree.SpreePingpp = () ->
-	  $('div[data-hook="checkout_payment_step"] input[type="radio"]').click ->
-		  if this.value == SpreePingpp.paymentMethodID
-			  $("#checkout_form_payment [data-hook=buttons]").hide()
+window.SpreePingppPay = {}
 
-  Spree.SpreePingpp()
+Spree.ready ($) ->
+	Spree.SpreePingpp =
+		updateSaveAndContinueVisibility: ()->
+			if this.isButtonHidden()
+				$(this).trigger('hideSaveAndContinue')
+			else 
+				$(this).trigger('showSaveAndContinue')
+		isButtonHidden:  ()->
+			paymentMethod = this.checkedPaymentMethod();
+			(!$('#use_existing_card_yes:checked').length && window.SpreePingppPay.paymentMethodID && paymentMethod.val() == window.SpreePingppPay.paymentMethodID);
+		checkedPaymentMethod: ()->
+			$('div[data-hook="checkout_payment_step"] input[type="radio"][name="order[payments_attributes][][payment_method_id]"]:checked');
+		hideSaveAndContinue: ()->
+			$("#checkout_form_payment [data-hook=buttons]").hide();
+		showSaveAndContinue: ()->
+			$("#checkout_form_payment [data-hook=buttons]").show();
 
-window.SpreePingpp = {}	
+	Spree.SpreePingpp.updateSaveAndContinueVisibility()		
+	$('div[data-hook="checkout_payment_step"] input[type="radio"]').click ->
+		if this.value == SpreePingppPay.paymentMethodID
+			$("#checkout_form_payment [data-hook=buttons]").hide()
+
